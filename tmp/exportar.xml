@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Departamentos>
+  <Departamento>
+    <CodDepartamento>DEW</CodDepartamento>
+    <DescDepartamento>Departamento 1</DescDepartamento>
+    <FechaBaja/>
+    <VolumenNegocio>35</VolumenNegocio>
+  </Departamento>
+  <Departamento>
+    <CodDepartamento>FIN</CodDepartamento>
+    <DescDepartamento>Departamento financiero</DescDepartamento>
+    <FechaBaja/>
+    <VolumenNegocio>50.3</VolumenNegocio>
+  </Departamento>
+  <Departamento>
+    <CodDepartamento>HJL</CodDepartamento>
+    <DescDepartamento>Departamento 3</DescDepartamento>
+    <FechaBaja/>
+    <VolumenNegocio>50.2</VolumenNegocio>
+  </Departamento>
+  <Departamento>
+    <CodDepartamento>LOL</CodDepartamento>
+    <DescDepartamento>Departamento 2</DescDepartamento>
+    <FechaBaja/>
+    <VolumenNegocio>6.25</VolumenNegocio>
+  </Departamento>
+  <Departamento>
+    <CodDepartamento>LYO</CodDepartamento>
+    <DescDepartamento>Departamento de logística y operaciones</DescDepartamento>
+    <FechaBaja/>
+    <VolumenNegocio>200.15</VolumenNegocio>
+  </Departamento>
+  <Departamento>
+    <CodDepartamento>MKT</CodDepartamento>
+    <DescDepartamento>Departamento de marketing</DescDepartamento>
+    <FechaBaja/>
+    <VolumenNegocio>20.35</VolumenNegocio>
+  </Departamento>
+</Departamentos>
