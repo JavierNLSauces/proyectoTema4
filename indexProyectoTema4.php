@@ -42,16 +42,32 @@
     <main>
         <table class="content">
             <tr>
-                <th>Enunciado</th>
-                <th colspan="2">PDO</th>
-                <th colspan="2">mysqli</th>
+                <th></th>
+                <th>Ejecutar</th>
             </tr>
             <tr>
-                <td colspan="5"><a href="mostrarcodigo/muestraEjercicio00PDO.php">Scripts tabla Departamento</a></td>
+                <td colspan="5"><a href="mostrarcodigo/muestraEjercicio00PDO.php">Scripts base de datos DAW217DBDepartamentos</a></td>
             </tr> 
             <tr>
                 <td colspan="5"><a href="mostrarcodigo/muestraConfigPDOmysqli.php">Archivos de configuracion PDO y mysqli</a></td>
             </tr> 
+            <tr>
+                <td>Script crear tabla</td> 
+                <td><a href="scriptDB/crearTabla.php"><img src="webroot/media/play_image.png"/></a></td>
+            </tr>
+            <tr>
+                <td>Script carga inicial tabla</td>
+                <td><a href="scriptDB/cargaInicialTabla.php"><img src="webroot/media/play_image.png"/></a></td>
+            </tr> 
+            <tr>
+                <td>Script borrar tabla</td>
+                <td><a href="scriptDB/borrarTabla.php"><img src="webroot/media/play_image.png"/></a></td>
+            </tr> 
+            <tr>
+                <th>Enunciado</th>
+                <th colspan="2">PDO</th>
+                <th colspan="2">mysqli</th>
+            </tr>
             <tr>
                 <th></th>
                 <th>Ejecutar</th>
@@ -91,16 +107,48 @@
                 <td><a href="codigoPHP/ejercicio06PDO.php"><img src="webroot/media/play_image.png"/></a></td>
                 <td><a href="mostrarcodigo/muestraEjercicio06PDO.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
+            
+            <tr>
+                <th></th>
+                <th colspan="2">XML</th>
+                <th colspan="2">JSON</th>
+                <th colspan="2">CSV</th>
+                <th colspan="2">LOCAL</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>Ejecutar</th>
+                <th>Mostrar</th>
+                <th>Ejecutar</th>
+                <th>Mostrar</th>
+                <th>Ejecutar</th>
+                <th>Mostrar</th>
+                <th>Ejecutar</th>
+                <th>Mostrar</th>
+            </tr>
             <tr>
                 <td>07. Página web que toma datos (código y descripción) de un fichero xml y los añade a la tabla Departamento de nuestra base de datos. (IMPORTAR). El fichero importado se encuentra en el directorio .../tmp/ del servidor</td>
-                <!--<td><a href="codigoPHP/ejercicio07.php"><img src="webroot/media/play_image.png"/></a></td>
-                <td><a href="mostrarcodigo/muestraEjercicio07.php"><img src="webroot/media/code_image.png"/></a></td>-->
+                <td><a href="codigoPHP/ejercicio07PDOXML.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio07PDOXML.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio07PDOJSON.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio07PDOJSON.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio07PDOCSV.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio07PDOCSV.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio07PDOLOCAL.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio07PDOLOCAL.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
             <tr>
                 <td>08. Página web que toma datos (código y descripción) de la tabla Departamento y guarda en un fichero departamento.xml. (COPIA DE SEGURIDAD / EXPORTAR). El fichero exportado se encuentra en el directorio .../tmp/ del servidor.</td>
-                <td><a href="codigoPHP/ejercicio08PDO.php"><img src="webroot/media/play_image.png"/></a></td>
-                <td><a href="mostrarcodigo/muestraEjercicio08PDO.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio08PDOXML.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio08PDOXML.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio08PDOJSON.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio08PDOJSON.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio08PDOCSV.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio08PDOCSV.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio08PDOLOCAL.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio08PDOLOCAL.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr>
+            
         </table>
         
         

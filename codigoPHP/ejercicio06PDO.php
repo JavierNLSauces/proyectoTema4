@@ -25,55 +25,36 @@
             
             $consulta = $miDB->prepare($sql);
             
-            $departamentosnuevos[0] = [":CodDepartamento" => "DEW", // declaro la primera posicion del array de departamentosnuevos con los datos del primer departamento
-                                     ":DescDepartamento" => "Departamento 1",
-                                     ":VolumenNegocio" => 35];
+            $departamentosnuevos = [
+                                    ["CodDepartamento" => "RHS", // declaro la primera posicion del array de departamentosnuevos con los datos del primer departamento
+                                     "DescDepartamento" => "Departamento de recursos humanos",
+                                     "VolumenNegocio" => 35],
+                                    ["CodDepartamento" => "CDG", // declaro la segunda posicion del array de departamentosnuevos con los datos del segundo departamento
+                                     "DescDepartamento" => "Departamento de control de gestión",
+                                     "VolumenNegocio" => 6.25],
+                                    ["CodDepartamento" => "CPS", // declaro la tercera posicion del array de departamentosnuevos con los datos del tercer departamento
+                                     "DescDepartamento" => "Departamento de compras",
+                                     "VolumenNegocio" => 50.2]
+            ];
             
-            $departamentosnuevos[1] = [":CodDepartamento" => "LOL", // declaro la segunda posicion del array de departamentosnuevos con los datos del segundo departamento
-                                     ":DescDepartamento" => "Departamento 2",
-                                     ":VolumenNegocio" => 6.25];
+            $miDB->beginTransaction(); //Deshabilita el modo autocommit
             
-            $departamentosnuevos[2] = [":CodDepartamento" => "HJL", // declaro la tercera posicion del array de departamentosnuevos con los datos del tercer departamento
-                                     ":DescDepartamento" => "Departamento 3",
-                                     ":VolumenNegocio" => 50.2];
-            
-            for($nDepartamento=0;$nDepartamento<=2;$nDepartamento++){ // recorro el array de departamentosnuevos 
-                $consulta->execute($departamentosnuevos[$nDepartamento]); // ejecuto la consulta con los datos del departamento que esta en la posicion $nDepartamento
+            foreach($departamentosnuevos as $nDepartamento){ // recorro el array de departamentosnuevos 
+                $parametros = [ ":CodDepartamento" => $nDepartamento['CodDepartamento'], // guardo en el elemento el valor del codigo de departamento del array $departamento dependiendo ed la posicion
+                                ":DescDepartamento" => $nDepartamento['DescDepartamento'], // guardo en el elemento el valor de la descripcion del departamento del array $departamento dependiendo ed la posicion
+                                ":VolumenNegocio" => $nDepartamento['VolumenNegocio'] ]; // guardo en el elemento el valor del volumen de negocio del departamento del array $departamento dependiendo de la posicion
+                
+                $consulta->execute($parametros); // ejecuto la consulta con los datos del departamento que esta en la posicion $nDepartamento
             }
+            
+            $miDB->commit(); // Confirma los cambios y los consolida
             
             echo "<p style='color:green;'>INSTRUCCIONES REALIZADAS CON EXITO</p>";
-            
-            $sql2="SELECT * FROM Departamento";
-            $consulta2=$miDB->prepare($sql2); // preparo la consulta
-            $consulta2->execute(); // ejecuto la consulta
-            
-        ?>
-        <table>
-            <tr>
-                <th>CodDepartamento</th>
-                <th>DescDepartamento</th>
-                <th>FechaBaja</th>
-                <th>VolumenNegocio</th>
-            </tr>
-            <?php 
-                $oDepartamento = $consulta2->fetchObject(); // Obtengo el primer registro de la consulta como un objeto
-                while($oDepartamento) { // recorro los registros que devuelve la consulta de la consulta ?>
-            <tr>
-                <td><?php echo $oDepartamento->CodDepartamento; // obtengo el valor del codigo del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->DescDepartamento; // obtengo el valor de la descripcion del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->FechaBaja; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->VolumenNegocio; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
-            </tr>
-            <?php 
-                $oDepartamento = $consulta2->fetchObject(); // guardo el registro actual como un objeto y avanzo el puntero al siguiente registro de la consulta 
-            }
-            ?>
-        </table>      
-        <?php
         
             }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
                 echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
                 echo "<p style='color:red;'>Error: ".$miExceptionPDO->getMessage()."</p>"; // Muestra el mensaje de error
+                $miDB->rollBack(); // Revierte o deshace los cambios
                 die(); // Finalizo el script
             }finally{ // codigo que se ejecuta haya o no errores
                 unset($miDB);// destruyo la variable 

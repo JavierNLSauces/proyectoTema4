@@ -38,38 +38,25 @@
            
             if(isset($_REQUEST["Enviar"])){ // compruebo que el usuario le ha dado a al boton de enviar y valido la entrada de todos los campos
                 $aErrores['CodDepartamento']= validacionFormularios::comprobarAlfabetico($_REQUEST['CodDepartamento'], 3, 3, OBLIGATORIO); // compruebo que la entrada del codigo de departamento es correcta
+                if($aErrores['CodDepartamento']==null){
+                    if(!ctype_upper($_REQUEST['CodDepartamento'])){ // si introduce el codigo del departamento en minuscula
+                        $aErrores['CodDepartamento']= "El código de Departamento debe introducirse en mayusculas"; // genera un mensaje de error para que lo meta en mayusculas
+                    }
+                }
                 if($aErrores['CodDepartamento']==null){ // si no ha habido ningun error de validacion del campo del codigo del departamento
                     try { // Bloque de código que puede tener excepciones en el objeto PDO
                         $miDB = new PDO(DNS,USER,PASSWORD); // creo un objeto PDO con la conexion a la base de datos
 
                         $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Establezco el atributo para la apariciopn de errores y le pongo el modo para que cuando haya un error se lance una excepcion
-
-                        /* Sin consulta preparada
-                            $sql='SELECT * FROM Departamento';
-                            $resultadoConsulta = $miDB->query($sql);
-                            foreach ($resultadoConsulta as $departamento) {
-                                if($departamento['CodDepartamento']==strtoupper($_REQUEST['CodDepartamento'])){ 
-                                    $aErrores['CodDepartamento']= "El código de Departamento introducido ya existe";
-                                }
-                            }
-                        */
                         
-                        $sql = 'SELECT * FROM Departamento';
-                        $consulta = $miDB->prepare($sql); // preparo la consulta
-                        
-                        $consulta->execute(); // ejecuto la consulta 
-                        
-                        $registroConsulta = $consulta->fetchObject(); // Obtengo el primer registro de la consulta como un objeto
-                        while($registroConsulta){ // recorro los registros que devuelve la consulta de la consulta 
-                            if($registroConsulta->CodDepartamento == strtoupper($_REQUEST['CodDepartamento'])){ // si hay algun codigo de departamento que coincida con lo que ha introducido el usuario
-                                $aErrores['CodDepartamento']= "El código de Departamento introducido ya existe"; // meto un mensaje de error en el array de errores del codigo del departamento
-                            }
-                            $registroConsulta = $consulta->fetchObject();  // guardo el registro actual como un objeto y avanzo el puntero al siguiente registro de la consulta
+                        $sql = "SELECT CodDepartamento FROM Departamento WHERE CodDepartamento=:codDepartamento";
+                        $consulta = $miDB->prepare($sql); // prepara la consulta
+                        $parametros = [':codDepartamento'=> $_REQUEST['CodDepartamento']];
+                        $consulta->execute($parametros); // ejecuta la consulta 
+                        if($consulta->rowCount()>0){
+                            $aErrores['CodDepartamento']= "El código de Departamento introducido ya existe"; // meto un mensaje de error en el array de errores del codigo del departamento
                         }
                         
-                        
-                        
-
                     }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
                         echo "<p style='color:red;'>ERROR</p>";
                         echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
@@ -82,6 +69,9 @@
                     
                 $aErrores['DescDepartamento']= validacionFormularios::comprobarAlfaNumerico($_REQUEST['DescDepartamento'], 255, 1, OBLIGATORIO); // compruebo que la entrada de la descripcion del departamento es correcta
                 $aErrores['VolumenNegocio']= validacionFormularios::comprobarFloat($_REQUEST['VolumenNegocio'], 3.402823466E+38, 0, OBLIGATORIO); // compruebo que la entrada del volumen de negocio del departamento es correcta
+                if($aErrores['VolumenNegocio']==null){ // si no ha habido ningun error anterior
+                    strpos($_REQUEST['VolumenNegocio'],",")? $aErrores['VolumenNegocio']="Debe introducir un numero decimal con '.'": null;// si introduce un decimal con "," se genera un mensaje de error
+                }
                 
                 foreach ($aErrores as $campo => $error) { // recorro el array de errores
                     if($error != null){ // compruebo si hay algun mensaje de error en algun campo
@@ -107,8 +97,8 @@
                 echo "<p>Volumen de Negocio: ".$aRespuestas['VolumenNegocio']."</p>";
                 
                 
-                // Mostrar Contenido de la tabla
-                echo "<h2>Contenido tabla Departamento</h2>";
+                // Inserccion del departamento
+                
                 try { // Bloque de código que puede tener excepciones en el objeto PDO
                     $miDB = new PDO(DNS,USER,PASSWORD); // creo un objeto PDO con la conexion a la base de datos
 
@@ -120,49 +110,19 @@
                     $numRegistros = $miDB->exec($sqlInserccion);
                     
                     $sql='SELECT * FROM Departamento';
-                    $resultadoConsulta = $miDB->query($sql);
+                    $consulta2 = $miDB->query($sql);
                     */
                     
-                    $sql2 = <<<CONSULTA
-                            INSERT INTO Departamento(CodDepartamento,DescDepartamento,VolumenNegocio) VALUES 
-                            (:CodDepartamento, :DescDepartamento,:VolumenNegocio);
-CONSULTA;
-                    $resultadoConsulta=$miDB->prepare($sql2); // preparo la consulta
+                    $sql2 = "INSERT INTO Departamento(CodDepartamento,DescDepartamento,VolumenNegocio) VALUES (:CodDepartamento, :DescDepartamento,:VolumenNegocio)";
                     
-                    $parametros = [ ":CodDepartamento" => $aRespuestas['CodDepartamento'],
+                    $consulta2=$miDB->prepare($sql2); // preparo la consulta
+                    
+                    $parametros = [ ":CodDepartamento" => $aRespuestas['CodDepartamento'], // asigno los valores del formulario en el array de parametros
                                     ":DescDepartamento" => $aRespuestas['DescDepartamento'],
                                     ":VolumenNegocio" => $aRespuestas['VolumenNegocio'] ];
                     
-                    $resultadoConsulta->execute($parametros); // ejecuto la consulta pasando los parametros del array de parametros
+                    $consulta2->execute($parametros); // ejecuto la consulta pasando los parametros del array de parametros
                     
-                    
-                    $sql3="SELECT * FROM Departamento";
-                    $resultadoConsulta2=$miDB->prepare($sql3); // preparo la consulta
-                    $resultadoConsulta2->execute(); // ejecuto la consulta
-        ?>
-        <table>
-            <tr>
-                <th>CodDepartamento</th>
-                <th>DescDepartamento</th>
-                <th>FechaBaja</th>
-                <th>VolumenNegocio</th>
-            </tr>
-            <?php 
-                $oDepartamento = $resultadoConsulta2->fetchObject(); // Obtengo el primer registro de la consulta como un objeto
-                while($oDepartamento) { // recorro los registros que devuelve la consulta de la consulta ?>
-            <tr>
-                <td><?php echo $oDepartamento->CodDepartamento; // obtengo el valor del codigo del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->DescDepartamento; // obtengo el valor de la descripcion del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->FechaBaja; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->VolumenNegocio; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
-            </tr>
-            <?php 
-                $oDepartamento = $resultadoConsulta2->fetchObject(); // guardo el registro actual como un objeto y avanzo el puntero al siguiente registro de la consulta 
-            }
-            ?>
-        </table>    
-        <?php
-                
                 }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
                     echo "<p style='color:red;'>ERROR EN LA CONEXION</p>";
                     echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
@@ -183,7 +143,7 @@ CONSULTA;
                         echo (isset($_REQUEST['CodDepartamento'])) ? $_REQUEST['CodDepartamento'] : null; // si el campo esta correcto mantengo su valor en el formulario
                     ?>">
                     <?php
-                        echo ($aErrores['CodDepartamento']) ? "<span style='color:#FF0000'>".$aErrores['CodDepartamento']."</span>" : "<span style='color:#81BEF7'>Nombre del departamento FORMATO: Tres letras mayusculas</span>";// si el campo es erroneo se muestra un mensaje de error
+                        echo ($aErrores['CodDepartamento']!=null) ? "<span style='color:#FF0000'>".$aErrores['CodDepartamento']."</span>" : "<span style='color:#81BEF7'>Nombre del departamento FORMATO: Tres letras mayusculas</span>";// si el campo es erroneo se muestra un mensaje de error
                     ?>
                 </div>
                 <div>
@@ -192,7 +152,7 @@ CONSULTA;
                         echo (isset($_REQUEST['DescDepartamento'])) ? $_REQUEST['DescDepartamento'] : null; // si el campo esta correcto mantengo su valor en el formulario
                     ?>">
                     <?php
-                        echo ($aErrores['DescDepartamento']) ? "<span style='color:#FF0000'>".$aErrores['DescDepartamento']."</span>" : "<span style='color:#81BEF7'>Descripcion del departamento</span>";// si el campo es erroneo se muestra un mensaje de error
+                        echo ($aErrores['DescDepartamento']!=null) ? "<span style='color:#FF0000'>".$aErrores['DescDepartamento']."</span>" : "<span style='color:#81BEF7'>Descripcion del departamento</span>";// si el campo es erroneo se muestra un mensaje de error
                     ?>
                 </div>                
                 <div>
@@ -201,7 +161,7 @@ CONSULTA;
                         echo (isset($_REQUEST['VolumenNegocio']))? $_REQUEST['VolumenNegocio'] : null; // si el campo esta correcto mantengo su valor en el formulario
                     ?>">
                     <?php
-                        echo(!is_null($aErrores['VolumenNegocio'])) ? "<span style='color:#FF0000'>".$aErrores['VolumenNegocio']."</span>" : "<span style='color:#81BEF7'>Volumen de Negocio del Departamento</span>"; // si el campo es erroneo se muestra un mensaje de error
+                        echo($aErrores['VolumenNegocio']!=null) ? "<span style='color:#FF0000'>".$aErrores['VolumenNegocio']."</span>" : "<span style='color:#81BEF7'>Volumen de Negocio del Departamento</span>"; // si el campo es erroneo se muestra un mensaje de error
                     ?>
                 </div>
             </fieldset>

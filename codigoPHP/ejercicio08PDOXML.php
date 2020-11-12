@@ -23,14 +23,14 @@
             $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Establezco el atributo para la apariciopn de errores y le pongo el modo para que cuando haya un error se lance una excepcion
             
             $sql="SELECT * FROM Departamento";
-            $consulta=$miDB->prepare($sql);
-            $consulta->execute();
+            $resultadoconsulta=$miDB->prepare($sql); // prepara la consulta
+            $resultadoconsulta->execute(); // ejecuta la consulta
             
             $documentoXML = new DOMDocument("1.0", "utf-8"); // creo el objeto de tipo DOMDocument que recibe 2 parametros: ela version y la codificacion del XML que queremos crear
-            $documentoXML->formatOutput = true; // establezco la salida formateada
+            $documentoXML->formatOutput = true; // establece la salida formateada
             $root = $documentoXML->appendChild($documentoXML->createElement('Departamentos')); // creo el nodo raiz
             
-            $oDepartamento = $consulta->fetchObject(); // Obtengo el primer registro de la consulta como un objeto
+            $oDepartamento = $resultadoconsulta->fetchObject(); // Obtengo el primer registro de la consulta como un objeto
             
             while($oDepartamento) { // recorro los registros que devuelve la consulta y por cada uno de ellos ejecuto el codigo siguiente
                 $departamento = $root->appendChild($documentoXML->createElement('Departamento')); // creo el nodo para el departamento 
@@ -38,11 +38,17 @@
                 $departamento->appendChild($documentoXML->createElement('DescDepartamento',$oDepartamento->DescDepartamento));// añado como hijo la descripcion del departamento con su valor
                 $departamento->appendChild($documentoXML->createElement('FechaBaja',$oDepartamento->FechaBaja));// añado como hijo la fecha de baja del departamento con su valor
                 $departamento->appendChild($documentoXML->createElement('VolumenNegocio',$oDepartamento->VolumenNegocio));// añado como hijo el volumen de negocio del departamento con su valor
-                $oDepartamento = $consulta->fetchObject(); // guardo el registro actual como un objeto y avanzo el puntero al siguiente registro de la consulta
+                $oDepartamento = $resultadoconsulta->fetchObject(); // guardo el registro actual como un objeto y avanzo el puntero al siguiente registro de la consulta
             }
-            $documentoXML->save('../tmp/exportar.xml'); // guardar el XML en la ruta 
             
-            echo "<p style='color:green;'>EXPORTACION REALIZADA CORRECTAMENTE</p>";
+            if($documentoXML->save("../tmp/". date('Ymd') ."exportacionXML.xml")){ // guarda el arbol XML en la ruta especificada con la fecha del dia que se ejecuta
+                echo "<p style='color:green;'>EXPORTACION REALIZADA CORRECTAMENTE</p>";
+                highlight_file("../tmp/". date('Ymd') ."exportacionXML.xml");
+                
+            }else{
+                echo "<p style='color:red;'>ERROR EN LA EXPORTACION</p>";
+            }
+            
         
         }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
             echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
