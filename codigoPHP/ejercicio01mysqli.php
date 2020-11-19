@@ -9,14 +9,14 @@
         <?php
         /**
          *   @author: Javier Nieto Lorenzo
-         *   @since: 29/10/2020
+         *   @since: 15/11/2020
          *   01.- (ProyectoTema4) Conexión a la base de datos con la cuenta usuario y tratamiento de errores.
 
         */ 
         require_once '../config/confDBmysqli.php'; // incluiyo las constantes con los datos para la conexion con la base de datos
         
         $controlador = new mysqli_driver(); // creo un objeto de la clase mysqli_driver
-        $controlador->report_mode = MYSQLI_REPORT_STRICT; // Lanza una mysqli_exception para errors en lugar de para advertenciass 
+        $controlador->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT; // Establece reporte de errore mysqli y que salte excepcion
         
         try { //Código susceptible de producir un error
             echo "<h2>Conexion correcta mysqli</h2>";

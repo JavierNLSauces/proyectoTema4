@@ -18,7 +18,6 @@
         <h1>TEMA 4 DWES </h1>
         <a class="github" href="https://github.com/JavierNLSauces/" target="_blank"><img  src="webroot/media/github.png" alt="github icon"></a>
     </header>
-
     <nav>
         <ul>
             <li>
@@ -38,7 +37,6 @@
             </li>
         </ul>
     </nav>
-
     <main>
         <table class="content">
             <tr>
@@ -86,26 +84,36 @@
                 <td>02. Mostrar el contenido de la tabla Departamento y el número de registros.</td>
                 <td><a href="codigoPHP/ejercicio02PDO.php"><img src="webroot/media/play_image.png"/></a></td>
                 <td><a href="mostrarcodigo/muestraEjercicio02PDO.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio02mysqli.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio02mysqli.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
             <tr>
                 <td>03. Formulario para añadir un departamento a la tabla Departamento con validación de entrada y control de errores.</td>
                 <td><a href="codigoPHP/ejercicio03PDO.php"><img src="webroot/media/play_image.png"/></a></td>
                 <td><a href="mostrarcodigo/muestraEjercicio03PDO.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio03mysqli.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio03mysqli.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
             <tr>
                 <td>04. Formulario de búsqueda de departamentos por descripción (por una parte del campo DescDepartamento, si el usuario no pone nada deben aparecer todos los departamentos).</td>
                 <td><a href="codigoPHP/ejercicio04PDO.php"><img src="webroot/media/play_image.png"/></a></td>
                 <td><a href="mostrarcodigo/muestraEjercicio04PDO.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio04mysqli.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio04mysqli.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
             <tr>
                 <td>05. Pagina web que añade tres registros a nuestra tabla Departamento utilizando tres instrucciones insert y una transacción, de tal forma que se añadan los tres registros o no se añada ninguno.</td>
                 <td><a href="codigoPHP/ejercicio05PDO.php"><img src="webroot/media/play_image.png"/></a></td>
                 <td><a href="mostrarcodigo/muestraEjercicio05PDO.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio05mysqli.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio05mysqli.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
             <tr>
                 <td>06. Pagina web que cargue registros en la tabla Departamento desde un array departamentosnuevos utilizando una consulta preparada.  Probar consultas preparadas sin bind, pasando los parámetros en un array a execute.</td>
                 <td><a href="codigoPHP/ejercicio06PDO.php"><img src="webroot/media/play_image.png"/></a></td>
                 <td><a href="mostrarcodigo/muestraEjercicio06PDO.php"><img src="webroot/media/code_image.png"/></a></td>
+                <td><a href="codigoPHP/ejercicio06mysqli.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td><a href="mostrarcodigo/muestraEjercicio06mysqli.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
             
             <tr>
@@ -153,7 +161,6 @@
         
         
     </main>
-
     <footer>
         <address> &copy; 2020-2021 Javier Nieto Lorenzo </address>
     </footer>

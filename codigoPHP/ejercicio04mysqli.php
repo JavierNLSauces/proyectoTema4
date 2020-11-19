@@ -19,14 +19,18 @@
         */ 
         
         require_once '../core/201020libreriaValidacion.php'; // incluyo la libreria de validacion para validar los campos de formulario
-        require_once '../config/confDBPDO.php';
-            define("OPCIONAL",0);// defino e inicializo la constante a 0 para los campos que son opcionales
-            
-            $entradaOK=true; // declaro la variable que determina si esta bien la entrada de los campos introducidos por el usuario
-            
-            $errorDescDepartamento = null;
-            
-            $descDepartamento = null;
+        require_once '../config/confDBmysqli.php';
+        
+        $controlador = new mysqli_driver(); // creo un objeto de la clase mysqli_driver
+        $controlador->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT; // Establece reporte de errore mysqli y que salte excepcion
+        
+        define("OPCIONAL",0);// defino e inicializo la constante a 0 para los campos que son opcionales
+
+        $entradaOK=true; // declaro la variable que determina si esta bien la entrada de los campos introducidos por el usuario
+
+        $errorDescDepartamento = null;
+
+        $descDepartamento = null;
         ?>
         
         <form name="formulario" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
@@ -74,20 +78,19 @@
                 
                 echo "<h2>Contenido tabla Departamentos</h2>";
                 try { // Bloque de código que puede tener excepciones en el objeto PDO
-                    $miDB = new PDO(DNS,USER,PASSWORD); // creo un objeto PDO con la conexion a la base de datos
+                    $miDB = new mysqli(); //Instanciamos un objeto mysqli
+                    $miDB->connect(HOST,USER,PASSWORD,DATABASE); // Abre una conexion con la base de datos
 
-                    $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Establezco el atributo para la apariciopn de errores y le pongo el modo para que cuando haya un error se lance una excepcion
+                    $consulta = $miDB->stmt_init(); // Inicializa una sentencia y devuelve un objeto para usarlo con mysqli_stmt::prepare()
+                    $sql = "SELECT * FROM Departamento WHERE DescDepartamento LIKE CONCAT('%',?,'%')";
+                    $consulta->prepare($sql); // prepara la consulta
+                    $consulta->bind_param('s', $descDepartamento); // da valor al parametro de la consulta
+                    $consulta->execute(); // ejecuta la consulta 
+                    $consulta->store_result(); // almacena el resultado de la consulta
+                    $consulta->bind_result($codigoDepartamento,$descripcionDepartamento,$fechaBaja,$volumenNegocio); // Vincula columnas del conjunto de resultados a variables.
                     
                     
-                    $sql = 'SELECT * FROM Departamento WHERE DescDepartamento LIKE "%":DescDepartamento"%"';
-                    
-                    $consulta = $miDB->prepare($sql); // preparo la consulta
-                    
-                    $parametros = [":DescDepartamento" => $descDepartamento ];
-                    
-                    $consulta->execute($parametros); // ejecuto la consulta con los paremtros del array de parametros
-                    
-                    if($consulta->rowCount()>0){ // si la consulta devuelve algun registro
+                    if($consulta->num_rows>0){ // si la consulta devuelve algun registro
         ?>
         <table>
             <tr>
@@ -97,17 +100,15 @@
                 <th>VolumenNegocio</th>
             </tr>
             <?php 
-                $oDepartamento = $consulta->fetchObject(); // Obtengo el primer registro de la consulta como un objeto
-                while($oDepartamento) { // recorro los registros que devuelve la consulta de la consulta ?>
+                    while($consulta->fetch()) { // Obtiene los resultados de una sentencia preparadas en las variables vinculadas?>
             <tr>
-                <td><?php echo $oDepartamento->CodDepartamento; // obtengo el valor del codigo del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->DescDepartamento; // obtengo el valor de la descripcion del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->FechaBaja; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
-                <td><?php echo $oDepartamento->VolumenNegocio; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
+                <td><?php echo $codigoDepartamento; // obtengo el valor del codigo del departamento?></td>
+                <td><?php echo $descripcionDepartamento; // obtengo el valor de la descripcion del departamento?></td>
+                <td><?php echo $fechaBaja; // obtengo el valor de la fecha de baja del departamento?></td>
+                <td><?php echo $volumenNegocio; // obtengo el valor de la fecha de baja del departamento?></td>
             </tr>
             <?php 
-                $oDepartamento = $consulta->fetchObject(); // guardo el registro actual como un objeto y avanzo el puntero al siguiente registro de la consulta 
-            }
+                    }
             ?>
         </table>   
         
@@ -117,14 +118,13 @@
                 }
                 
                 echo "<p style='color:green;'>BUSQUEDA REALIZADA CON EXITO</p>";
-                
-                }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
+                $consulta->close(); // Cierra la consulta preparada
+                }catch (mysqli_sql_exception $miExceptionMysqli) { // Codigo que se ejecuta si hay alguna excepcion
                     echo "<p style='color:red;'>ERROR EN LA CONEXION</p>";
-                    echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
-                    echo "<p style='color:red;'>Error: ".$miExceptionPDO->getMessage()."</p>"; // Muestra el mensaje de error
-                    die(); // Finalizo el script
+                    echo "<p style='color:red;'>Código de error: ".$miExceptionMysqli->getCode()."</p>"; // Muestra el codigo del error
+                    exit("<p style='color:red;'>Error: ".$miExceptionMysqli->getMessage()."</p>"); //Imprime un mensaje con el error y termina el script actual
                 }finally{ // codigo que se ejecuta haya o no errores
-                    unset($miDB);// destruyo la variable 
+                    $miDB->close(); // Cierra la conexion con la base de datos
                 }
             }
         ?>

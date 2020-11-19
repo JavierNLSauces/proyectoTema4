@@ -15,8 +15,11 @@
         */ 
         
         require_once '../core/201020libreriaValidacion.php'; // incluyo la libreria de validacion para validar los campos de formulario
-        require_once '../config/confDBPDO.php';
-            
+        require_once '../config/confDBmysqli.php';
+        
+        $controlador = new mysqli_driver(); // creo un objeto de la clase mysqli_driver
+        $controlador->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT; // Establece reporte de errore mysqli y que salte excepcion
+    
             define("OBLIGATORIO",1);// defino e inicializo la constante a 1 para los campos que son obligatorios
             define('MYSQL_FLOAT_MAX',3.402823466E+38); // defino e inicializo la constante de el maximo float que acepta MySQL
             
@@ -44,26 +47,28 @@
                     }
                 }
                 if($aErrores['CodDepartamento']==null){ // si no ha habido ningun error de validacion del campo del codigo del departamento
-                    try { // Bloque de código que puede tener excepciones en el objeto PDO
-                        $miDB = new PDO(DNS,USER,PASSWORD); // creo un objeto PDO con la conexion a la base de datos
+                    
+                    try { //Bloque de código que puede tener excepciones en el objeto mysqli
+                        $miDB = new mysqli(); //Instanciamos un objeto mysqli
+                        $miDB->connect(HOST,USER,PASSWORD,DATABASE); // Abre una conexion con la base de datos
 
-                        $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Establezco el atributo para la apariciopn de errores y le pongo el modo para que cuando haya un error se lance una excepcion
-                        
-                        $sql = "SELECT CodDepartamento FROM Departamento WHERE CodDepartamento=:codDepartamento";
-                        $consulta = $miDB->prepare($sql); // prepara la consulta
-                        $parametros = [':codDepartamento'=> $_REQUEST['CodDepartamento']];
-                        $consulta->execute($parametros); // ejecuta la consulta 
-                        if($consulta->rowCount()>0){
+                        $consulta = $miDB->stmt_init(); // Inicializa una sentencia y devuelve un objeto para usarlo con mysqli_stmt::prepare()
+                        $sql = "SELECT CodDepartamento FROM Departamento WHERE CodDepartamento = ?";
+                        $consulta->prepare($sql); // prepara la consulta
+                        $consulta->bind_param('s', $_REQUEST['CodDepartamento']); // da valor al parametro de la consulta
+                        $consulta->execute(); // ejecuta la consulta 
+                        $consulta->store_result(); // almacena el resultado de la consulta
+                        if($consulta->num_rows>0){
                             $aErrores['CodDepartamento']= "El código de Departamento introducido ya existe"; // meto un mensaje de error en el array de errores del codigo del departamento
                         }
+                        $consulta->close(); // Cierra la consulta preparada
                         
-                    }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
-                        echo "<p style='color:red;'>ERROR</p>";
-                        echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
-                        echo "<p style='color:red;'>Error: ".$miExceptionPDO->getMessage()."</p>"; // Muestra el mensaje de error
-                        die();
-                    }finally{
-                        unset($miDB); // destruyo la variable de la conexion a la base de datos
+                    }catch (mysqli_sql_exception $miExceptionMysqli) { // Codigo que se ejecuta si hay alguna excepcion
+                       echo "<p style='color:red;'>ERROR EN LA CONEXION</p>";
+                       echo "<p style='color:red;'>Código de error: ".$miExceptionMysqli->getCode()."</p>"; // Muestra el codigo del error
+                       exit("<p style='color:red;'>Error: ".$miExceptionMysqli->getMessage()."</p>"); //Imprime un mensaje con el error y termina el script actual
+                    }finally{ // codigo que se ejecuta haya o no errores
+                        $miDB->close(); // Cierra la conexion con la base de datos
                     }
                 }
                     
@@ -100,36 +105,28 @@
                 // Inserccion del departamento
                 
                 try { // Bloque de código que puede tener excepciones en el objeto PDO
-                    $miDB = new PDO(DNS,USER,PASSWORD); // creo un objeto PDO con la conexion a la base de datos
+                    
+                    
+                    
+                    
+                    $miDB = new mysqli(); //Instanciamos un objeto mysqli
+                    $miDB->connect(HOST,USER,PASSWORD,DATABASE); // Abre una conexion con la base de datos
 
-                    $miDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Establezco el atributo para la apariciopn de errores y le pongo el modo para que cuando haya un error se lance una excepcion
+                    $consulta = $miDB->stmt_init(); // Inicializa una sentencia y devuelve un objeto para usarlo con mysqli_stmt::prepare()
+                    $sql2 = "INSERT INTO Departamento (CodDepartamento,DescDepartamento,VolumenNegocio) VALUES (?,?,?)";
+                    $consulta->prepare($sql2); // prepara la consulta
+                    $consulta->bind_param('ssd', $_REQUEST['CodDepartamento'],$_REQUEST['DescDepartamento'],$_REQUEST['VolumenNegocio']); //Agrega variables a una sentencia preparada como parámetros
+                    $consulta->execute(); // ejecuta la consulta 
+               
                     
-                    /* Sin consulta preparada
-                    $sqlInserccion="INSERT INTO Departamento(CodDepartamento,DescDepartamento,VolumenNegocio) VALUES ('{$aRespuestas['CodDepartamento']}', '{$aRespuestas['DescDepartamento']}',{$aRespuestas['VolumenNegocio']})";
-                    
-                    $numRegistros = $miDB->exec($sqlInserccion);
-                    
-                    $sql='SELECT * FROM Departamento';
-                    $consulta2 = $miDB->query($sql);
-                    */
-                    
-                    $sql2 = "INSERT INTO Departamento(CodDepartamento,DescDepartamento,VolumenNegocio) VALUES (:CodDepartamento, :DescDepartamento,:VolumenNegocio)";
-                    
-                    $consulta2=$miDB->prepare($sql2); // preparo la consulta
-                    
-                    $parametros = [ ":CodDepartamento" => $aRespuestas['CodDepartamento'], // asigno los valores del formulario en el array de parametros
-                                    ":DescDepartamento" => $aRespuestas['DescDepartamento'],
-                                    ":VolumenNegocio" => $aRespuestas['VolumenNegocio'] ];
-                    
-                    $consulta2->execute($parametros); // ejecuto la consulta pasando los parametros del array de parametros
                     echo "<p style='color:green;'>DEPARTAMENTO INSERTADO CORRECTAMENTE</p>";
-                }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
+                    $consulta->close(); // Cierra la consulta preparada
+                }catch (mysqli_sql_exception $miExceptionMysqli) { // Codigo que se ejecuta si hay alguna excepcion
                     echo "<p style='color:red;'>ERROR EN LA CONEXION</p>";
-                    echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
-                    echo "<p style='color:red;'>Error: ".$miExceptionPDO->getMessage()."</p>"; // Muestra el mensaje de error
-                    die(); // Finalizo el script
+                    echo "<p style='color:red;'>Código de error: ".$miExceptionMysqli->getCode()."</p>"; // Muestra el codigo del error
+                    exit("<p style='color:red;'>Error: ".$miExceptionMysqli->getMessage()."</p>"); //Imprime un mensaje con el error y termina el script actual
                 }finally{ // codigo que se ejecuta haya o no errores
-                    unset($miDB);// destruyo la variable 
+                    $miDB->close(); // Cierra la conexion con la base de datos
                 }
             }else{ // si hay algun campo de la entrada que este mal muestro el formulario hasta que introduzca bien los campos
         ?> 
@@ -171,6 +168,7 @@
         
         <?php
             }
+            
         ?>
     </body>
 </html>

@@ -50,6 +50,34 @@
             $miDB->commit(); // Confirma los cambios y los consolida
             
             echo "<p style='color:green;'>INSTRUCCIONES REALIZADAS CON EXITO</p>";
+            
+            $sql2="SELECT * FROM Departamento";
+            $consulta2=$miDB->prepare($sql2); // preparo la consulta
+            $consulta2->execute(); // ejecuto la consulta
+            
+        ?>
+        <table>
+            <tr>
+                <th>CodDepartamento</th>
+                <th>DescDepartamento</th>
+                <th>FechaBaja</th>
+                <th>VolumenNegocio</th>
+            </tr>
+            <?php 
+                $oDepartamento = $consulta2->fetchObject(); // Obtengo el primer registro de la consulta como un objeto
+                while($oDepartamento) { // recorro los registros que devuelve la consulta de la consulta ?>
+            <tr>
+                <td><?php echo $oDepartamento->CodDepartamento; // obtengo el valor del codigo del departamento del registro actual ?></td>
+                <td><?php echo $oDepartamento->DescDepartamento; // obtengo el valor de la descripcion del departamento del registro actual ?></td>
+                <td><?php echo $oDepartamento->FechaBaja; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
+                <td><?php echo $oDepartamento->VolumenNegocio; // obtengo el valor de la fecha de baja del departamento del registro actual ?></td>
+            </tr>
+            <?php 
+                $oDepartamento = $consulta2->fetchObject(); // guardo el registro actual como un objeto y avanzo el puntero al siguiente registro de la consulta 
+            }
+            ?>
+        </table>      
+        <?php
         
             }catch (PDOException $miExceptionPDO) { // Codigo que se ejecuta si hay alguna excepcion
                 echo "<p style='color:red;'>Código de error: ".$miExceptionPDO->getCode()."</p>"; // Muestra el codigo del error
