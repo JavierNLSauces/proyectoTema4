@@ -40,26 +40,20 @@
     <main>
         <table class="content">
             <tr>
+                <th>Scripts</th>
                 <th></th>
-                <th>Ejecutar</th>
+                <th>Mostrar</th>
             </tr>
             <tr>
-                <td colspan="5"><a href="mostrarcodigo/muestraEjercicio00PDO.php">Scripts base de datos DAW217DBDepartamentos</a></td>
+                <td>Scripts DAW217DBDepartamentos</td>
+                <td></td>
+                <td><a href="mostrarcodigo/muestraEjercicio00PDO.php"><img src="webroot/media/code_image.png"/></a></td>
+                
             </tr> 
             <tr>
-                <td colspan="5"><a href="mostrarcodigo/muestraConfigPDOmysqli.php">Archivos de configuracion PDO y mysqli</a></td>
-            </tr> 
-            <tr>
-                <td>Script crear tabla</td> 
-                <td><a href="scriptDB/crearTabla.php"><img src="webroot/media/play_image.png"/></a></td>
-            </tr>
-            <tr>
-                <td>Script carga inicial tabla</td>
-                <td><a href="scriptDB/cargaInicialTabla.php"><img src="webroot/media/play_image.png"/></a></td>
-            </tr> 
-            <tr>
-                <td>Script borrar tabla</td>
-                <td><a href="scriptDB/borrarTabla.php"><img src="webroot/media/play_image.png"/></a></td>
+                <td>Archivos de configuracion PDO y mysqli</td>
+                <td></td>
+                <td><a href="mostrarcodigo/muestraConfigPDOmysqli.php"><img src="webroot/media/code_image.png"/></a></td>
             </tr> 
             <tr>
                 <th>Enunciado</th>
