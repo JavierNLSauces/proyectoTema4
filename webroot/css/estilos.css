@@ -141,6 +141,12 @@ footer {
   align-items: center;
   justify-content: space-around;
 }
+footer a{
+    text-decoration: none;
+    color: black;
+}
+
+
 footer > address {
   font-size: 20px;
   padding: 10px 10px;

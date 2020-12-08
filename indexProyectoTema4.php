@@ -15,22 +15,21 @@
     </head>
     <body>
         <header>
-        <h1>TEMA 4 DWES </h1>
-        <a class="github" href="https://github.com/JavierNLSauces/" target="_blank"><img  src="webroot/media/github.png" alt="github icon"></a>
-    </header>
+            <h1>TEMA 4 DWES </h1>
+        </header>
     <nav>
         <ul>
             <li>
                 <a href="../index.html">HOME</a>
             </li>
             <li>
-                <a href="../proyectoDAW/indexProyectoDAW.php">DAW</a>
+                <a href="#">DAW</a>
             </li>
             <li>
-                <a href="../proyectoDIW/indexProyectoDIW.php">DIW</a>
+                <a href="#">DIW</a>
             </li>
             <li>
-                <a href="../proyectoDWEC/indexProyectoDWEC.php">DWEC</a>
+                <a href="#">DWEC</a>
             </li>
             <li class="active">
                 <a href="../proyectoDWES/indexProyectoDWES.php">DWES</a>  
@@ -156,6 +155,8 @@
         
     </main>
     <footer>
-        <address> &copy; 2020-2021 Javier Nieto Lorenzo </address>
+        <a href="http://daw217.ieslossauces.es/" target="_blank"> <img src="webroot/media/oneandone.png" alt="oneandone icon" width="40"></a>
+        <address>  <a href="../../index.html">&copy; 2020-2021 Javier Nieto Lorenzo</a> </address>
+        <a href="https://github.com/JavierNLSauces/" target="_blank"><img class="github" width="40" src="webroot/media/github.png" ></a>
     </footer>
 </html>
